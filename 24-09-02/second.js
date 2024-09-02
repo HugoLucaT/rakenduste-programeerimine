@@ -36,4 +36,13 @@ const addNestedShort = (num1) => (num2) => num1+num2;
 
 const printName = (name = "World") => `Hello ${name}`;
 
-console.log(printName());
+//console.log(printName());
+
+const newArray = [1,2,3,4,5]
+const add5ToArray = newArray.map(element => element +5 )
+
+console.log(add5ToArray);
+
+const threeParameters = newArray.map((element, index, array) => {
+    return element + 5
+});
