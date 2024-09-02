@@ -32,4 +32,8 @@ function addNumbersNested(num1){
 
 const addNestedShort = (num1) => (num2) => num1+num2;
 
-console.log(addNestedShort(5)(12));
+//console.log(addNestedShort(5)(12));
+
+const printName = (name = "World") => `Hello ${name}`;
+
+console.log(printName());
