@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { Box, List, ListItem, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import SubmitCat from "./SubmitCat";
 
 type Cat = {
   id: string;
@@ -10,24 +12,28 @@ type Cat = {
 
 const Cats = () => {
   const [cats, setCats] = useState<Cat[]>([]);
-  useEffect(() => {
-    const fetchCats = async () => {
-      const response = await fetch("http://localhost:8080/cats");
-      const data = await response.json();
 
-      setCats(data);
-    };
+  const fetchCats = async () => {
+    const response = await fetch("http://localhost:8080/cats");
+    const data = await response.json();
+
+    setCats(data);
+  };
+
+  useEffect(() => {
     fetchCats();
   }, []);
+
   return (
-    <div>
-      <h1>Cats</h1>
-      <ul>
+    <Box>
+      <Typography variant="h3">Cats</Typography>
+      <List>
         {cats.map((cat) => (
-          <li key={cat.id}>{JSON.stringify(cat)}</li>
+          <ListItem key={cat.id}>{JSON.stringify(cat)}</ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+      <SubmitCat fetchCats={fetchCats} />
+    </Box>
   );
 };
 
