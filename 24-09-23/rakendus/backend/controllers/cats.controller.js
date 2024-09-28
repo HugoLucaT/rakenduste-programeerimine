@@ -40,19 +40,30 @@ exports.read = (req, res) => {
 
 exports.update = (req, res) => {
   const { name } = req.body;
-  const { index } = req.params;
+  const { id } = req.params;
 
-  if (!index) {
-    return res.status(400).send("Index is undefined");
+  const cat = cats.find((cat) => cat.id == id.trim());
+
+  if (!cat) {
+    return res.status(404).send("No cat by that id");
   }
-  cats[index].updatedAt = Date.now();
-  cats[index].name = name;
-  res.send(`Updating cat at index: ${index}, with new name: ${name}`);
+  cat.name = name;
+  cat.updatedAt = Date.now();
+
+  res.send(`Cat with ID: ${id} updated with new name: ${name}`);
 };
 
 exports.delete = (req, res) => {
-  const { index } = req.params;
+  const { id } = req.params;
+  console.log(id);
 
-  cats[index].deleted = true;
-  res.send(`Cat at index ${index} has been deleted.`);
+  const cat = cats.find((cat) => cat.id == id.trim());
+
+  if (!cat) {
+    return res.status(404).send("No cat by that id");
+  }
+
+  cat.deleted = true;
+  const activeCats = cats.filter((cat) => !cat.deleted);
+  res.send(activeCats);
 };

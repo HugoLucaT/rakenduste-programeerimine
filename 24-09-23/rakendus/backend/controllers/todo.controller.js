@@ -41,22 +41,37 @@ exports.read = (req, res) => {
 
 exports.update = (req, res) => {
   const { title, priority } = req.body;
-  const { index } = req.params;
+  const { id } = req.params;
 
-  if (!index) {
-    return res.status(400).send("Index is undefined");
+  const todoItem = todo.find((item) => item.id == id);
+
+  if (!todoItem) {
+    return res.status(404).send("Todo not found");
   }
-  todo[index].updatedAt = Date.now();
-  todo[index].title = title;
-  todo[index].priority = priority;
+
+  todoItem.updatedAt = Date.now();
+  todoItem.title = title;
+  todoItem.priority = priority;
+
   res.send(
-    `Updating todo at index: ${index}, with new info: ${title} ${priority}`
+    `Updating todo with ID: ${id}, with new info: ${title}, priority: ${priority}`
   );
 };
 
 exports.delete = (req, res) => {
-  const { index } = req.params;
+  const { id } = req.params;
 
-  todo[index].deleted = true;
-  res.send(`Todo at index ${index} has been deleted.`);
+  const todoItem = todo.find((item) => item.id == id);
+
+  console.log("Todo array:", todo); // Log the entire todo array
+  console.log("ID to find:", id);
+
+  if (!todoItem) {
+    return res.status(404).send("Todo not found");
+  }
+
+  todoItem.deleted = true;
+
+  const activeTodos = todo.filter((todo) => !todo.deleted);
+  res.send(activeTodos);
 };

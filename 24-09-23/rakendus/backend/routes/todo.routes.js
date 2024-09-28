@@ -11,7 +11,7 @@ router.use(todoRouteMiddleware);
 // /cats/ Get endpoint level middleware
 router.get("/", todoGetRouteMiddleware, todoController.read);
 router.post("/", todoController.create);
-router.put("/:index", todoController.update);
-router.delete("/:index", todoController.delete);
+router.put("/:id", todoController.update);
+router.delete("/:id", todoController.delete);
 
 module.exports = router;

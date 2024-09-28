@@ -11,7 +11,7 @@ router.use(catsRouteMiddleware);
 // /cats/ Get endpoint level middleware
 router.get("/", catsGetRouteMiddleware, catsController.read);
 router.post("/", catsController.create);
-router.put("/:index", catsController.update);
-router.delete("/:index", catsController.delete);
+router.put("/:id", catsController.update);
+router.delete("/:id", catsController.delete);
 
 module.exports = router;
