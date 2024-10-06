@@ -3,10 +3,10 @@ import { ThemeProvider } from "@emotion/react";
 import "./App.css";
 import Cats from "./components/Cats";
 import Todo from "./components/ToDo";
-import { red } from "@mui/material/colors";
+import { red, green } from "@mui/material/colors";
 import { createTheme } from "@mui/material";
 
-const theme = createTheme({
+const catTheme = createTheme({
   palette: {
     primary: {
       main: red[500],
@@ -14,14 +14,24 @@ const theme = createTheme({
   },
 });
 
+const todoTheme = createTheme({
+  palette: {
+    primary: {
+      main: green[500],
+    },
+  },
+});
+
 function App() {
   return (
     <>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={catTheme}>
         <Cats />
       </ThemeProvider>
       <hr />
-      <Todo />
+      <ThemeProvider theme={todoTheme}>
+        <Todo />
+      </ThemeProvider>
     </>
   );
 }
