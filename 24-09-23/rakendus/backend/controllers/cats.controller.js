@@ -1,3 +1,5 @@
+const { validationResult } = require("express-validator");
+
 const cats = [
   {
     id: "d6f3d837-7f1f-45ec-86d9-214689cc7ba0",
@@ -34,23 +36,33 @@ exports.create = (req, res) => {
 };
 
 exports.read = (req, res) => {
-  const activeCats = cats.filter((cat) => !cat.deleted);
-  res.send(activeCats);
+  const result = validationResult(req);
+  if (result.isEmpty()) {
+    const activeCats = cats.filter((cat) => !cat.deleted);
+    res.send(activeCats);
+  }
+
+  res.send({ errors: result.array() });
 };
 
 exports.update = (req, res) => {
-  const { name } = req.body;
-  const { id } = req.params;
+  const result = validationResult(req);
+  if (result.isEmpty()) {
+    const { name } = req.body;
+    const { id } = req.params;
 
-  const cat = cats.find((cat) => cat.id == id.trim());
+    const cat = cats.find((cat) => cat.id == id.trim());
 
-  if (!cat) {
-    return res.status(404).send("No cat by that id");
+    if (!cat) {
+      return res.status(404).send("No cat by that id");
+    }
+    cat.name = name;
+    cat.updatedAt = Date.now();
+
+    res.send(`Cat with ID: ${id} updated with new name: ${name}`);
   }
-  cat.name = name;
-  cat.updatedAt = Date.now();
 
-  res.send(`Cat with ID: ${id} updated with new name: ${name}`);
+  res.send({ errors: result.array() });
 };
 
 exports.delete = (req, res) => {

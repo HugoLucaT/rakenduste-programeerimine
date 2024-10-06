@@ -1,3 +1,5 @@
+const { validationResult } = require("express-validator");
+
 const todo = [
   {
     id: 0,
@@ -35,27 +37,36 @@ exports.create = (req, res) => {
 };
 
 exports.read = (req, res) => {
-  const activeTodos = todo.filter((todo) => !todo.deleted);
-  res.send(activeTodos);
+  const result = validationResult(req);
+  if (result.isEmpty()) {
+    const activeTodos = todo.filter((todo) => !todo.deleted);
+    res.send(activeTodos);
+  }
+
+  res.send({ errors: result.array() });
 };
 
 exports.update = (req, res) => {
-  const { title, priority } = req.body;
-  const { id } = req.params;
+  const result = validationResult(req);
+  if (result.isEmpty()) {
+    const { title, priority } = req.body;
+    const { id } = req.params;
 
-  const todoItem = todo.find((item) => item.id == id);
+    const todoItem = todo.find((item) => item.id == id);
 
-  if (!todoItem) {
-    return res.status(404).send("Todo not found");
+    if (!todoItem) {
+      return res.status(404).send("Todo not found");
+    }
+
+    todoItem.updatedAt = Date.now();
+    todoItem.title = title;
+    todoItem.priority = priority;
+
+    res.send(
+      `Updating todo with ID: ${id}, with new info: ${title}, priority: ${priority}`
+    );
   }
-
-  todoItem.updatedAt = Date.now();
-  todoItem.title = title;
-  todoItem.priority = priority;
-
-  res.send(
-    `Updating todo with ID: ${id}, with new info: ${title}, priority: ${priority}`
-  );
+  res.send({ errors: result.array() });
 };
 
 exports.delete = (req, res) => {
